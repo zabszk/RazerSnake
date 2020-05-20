@@ -112,5 +112,13 @@
     <ItemGroup>
         <None Include="App.config" />
     </ItemGroup>
+    <ItemGroup>
+      <Content Include="LICENSE">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="NOTICE">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
