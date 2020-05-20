@@ -1,9 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Colore;
 using Colore.Data;
 using Colore.Effects.Keyboard;
-using ColoreColor = Colore.Data.Color;
 
 namespace RazerSnake
 {
@@ -37,8 +35,14 @@ namespace RazerSnake
         {
             bool blinkState = false, finishReset = true;
 
-            while (!MainForm.Disposing)
+            while (!MainForm.Stop)
             {
+                if (MainForm.Testing)
+                {
+                    await Task.Delay(200);
+                    continue;
+                }
+                
                 switch (Snake.State)
                 {
                     case Snake.GameState.SelectMode:
@@ -70,15 +74,16 @@ namespace RazerSnake
                     case Snake.GameState.Paused:
                         blinkState = !blinkState;
                         _grid[Key.Pause] = blinkState ? Color.Green : Color.Black;
-                        await ShowBoard(finishReset);
-                        finishReset = false;
+                        await ShowBoard();
                         await Task.Delay(250);
                         break;
                     
                     case Snake.GameState.Finished:
                         blinkState = !blinkState;
+                        _grid[Key.Escape] = blinkState ? Color.White : Color.Black;
                         _grid[Key.End] = blinkState ? Color.Green : Color.Black;
-                        await ShowBoard();
+                        await ShowBoard(finishReset);
+                        finishReset = false;
                         await Task.Delay(250);
                         break;
                     
@@ -142,6 +147,7 @@ namespace RazerSnake
 
                     if (reset)
                     {
+                        _grid[Key.Escape] = Color.White;
                         _grid[Key.Enter] = Color.Green;
                         MainForm.Instance.statusLabel.Text =
                             @"Please select speed using numeric keys (1-5) and press ENTER.";
@@ -182,8 +188,8 @@ namespace RazerSnake
                         _grid[Key.Left] = DarkGold;
                         _grid[Key.Right] = DarkGold;
                         
-                        _grid[Key.End] = DarkGreen;
-                        _grid[Key.Pause] = DarkGreen;
+                        _grid[Key.End] = Color.Black;
+                        _grid[Key.Pause] = Color.Black;
                     }
                     break;
                 
@@ -214,7 +220,7 @@ namespace RazerSnake
                         _grid[Key.Down] = DarkGold;
                         _grid[Key.Left] = DarkGold;
                         _grid[Key.Right] = DarkGold;
-
+                        
                         _grid[Key.End] = DarkGreen;
                         _grid[Key.Pause] = Color.Green;
 
@@ -231,6 +237,7 @@ namespace RazerSnake
                         _grid[Key.Left] = Color.Black;
                         _grid[Key.Right] = Color.Black;
 
+                        _grid[Key.Escape] = Color.White;
                         _grid[Key.End] = Color.Green;
                         _grid[Key.Pause] = Color.Black;
                         

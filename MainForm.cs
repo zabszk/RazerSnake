@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,7 +7,9 @@ namespace RazerSnake
     public partial class MainForm : Form
     {
         internal static MainForm Instance;
-        internal static bool Ready, Disposing = false;
+        internal static bool Stop, Testing;
+        private static bool _ready;
+        private static byte _testSequence;
         
         public MainForm()
         {
@@ -27,23 +23,13 @@ namespace RazerSnake
             Chroma.Init();
             await Task.Delay(1000);
             await Chroma.ShowBoard(true);
-            Ready = true;
-        }
-
-        private void Form1_Activated(object sender, EventArgs e)
-        {
-            
-        }
-
-        private void Form1_Deactivate(object sender, EventArgs e)
-        {
-            
+            _ready = true;
         }
 
         private async void Form1_KeyDown(object sender, KeyEventArgs e)
         {
             e.SuppressKeyPress = true;
-            if (!Ready) return;
+            if (!_ready) return;
             
             switch (e.KeyCode)
             {
@@ -61,6 +47,10 @@ namespace RazerSnake
                 
                 case Keys.Right:
                     Snake.Dir = Snake.Direction.Right;
+                    break;
+                
+                case Keys.Escape when Snake.State == Snake.GameState.SelectMode || Snake.State == Snake.GameState.Finished:
+                    Environment.Exit(0);
                     break;
                 
                 case Keys.D1 when Snake.State == Snake.GameState.SelectMode:
@@ -106,16 +96,30 @@ namespace RazerSnake
                     await Chroma.ShowBoard(true);
                     break;
                 
-                case Keys.End when Snake.State ==Snake.GameState.InProgress || Snake.State ==Snake.GameState.Paused || Snake.State ==Snake.GameState.Finished:
+                case Keys.End when Snake.State == Snake.GameState.InProgress || Snake.State ==Snake.GameState.Paused || Snake.State ==Snake.GameState.Finished:
                     Snake.State = Snake.GameState.SelectMode;
                     await Chroma.ShowBoard(true);
                     break;
+                
+                case Keys.Insert when Snake.State == Snake.GameState.SelectMode && _testSequence < 2:
+                    _testSequence++;
+                    break;
+                
+                case Keys.Home when _testSequence == 2:
+                    Testing = true;
+                    await Chroma.MapTest();
+                    Testing = false;
+                    await Chroma.ShowBoard(true);
+                    break;
             }
+
+            if (e.KeyCode != Keys.Insert)
+                _testSequence = 0;
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Disposing = true;
+            Stop = true;
         }
     }
 }
