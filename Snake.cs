@@ -25,11 +25,43 @@ namespace RazerSnake
         
         internal static byte[][] Board = new byte[14][];
 
-        internal static byte Speed = 1;
-        internal static float Countdown = 3f;
-        internal static GameState State;
+        internal static byte Speed
+        {
+            get => _speed;
+            set
+            {
+                _speed = value;
+
+                switch (_speed)
+                {
+                    case 1:
+                        SleepTime = 800;
+                        return;
+                    
+                    case 2:
+                        SleepTime = 600;
+                        return;
+                    
+                    case 3:
+                        SleepTime = 400;
+                        return;
+                    
+                    case 4:
+                        SleepTime = 250;
+                        return;
+                    
+                    default:
+                        SleepTime = 150;
+                        return;
+                }
+            }
+        }
+        
+        internal static byte Countdown = 3;
+        internal static ushort SleepTime = 400;
+        internal static GameState State = GameState.SelectMode;
         internal static Direction Dir;
-        private static byte SnakeLength;
+        private static byte _snakeLength, _speed = 3;
         private static readonly Random Rng = new Random();
 
         static Snake()
@@ -57,7 +89,7 @@ namespace RazerSnake
         {
             ClearBoard();
             State = GameState.Countdown;
-            SnakeLength = 3;
+            _snakeLength = 3;
             Dir = Direction.Right;
 
             Board[1][1] = 3;
@@ -82,7 +114,7 @@ namespace RazerSnake
                         y = (sbyte)j;
                     }
 
-                    if (Board[i][j] == SnakeLength)
+                    if (Board[i][j] == _snakeLength)
                     {
                         x2 = i;
                         y2 = j;
@@ -136,8 +168,8 @@ namespace RazerSnake
                 
                 case Food:
                     Board[x][y] = 1;
-                    Board[x2][y2] = SnakeLength;
-                    SnakeLength++;
+                    Board[x2][y2] = _snakeLength;
+                    _snakeLength++;
                     RefreshFood();
                     break;
                 
@@ -149,14 +181,16 @@ namespace RazerSnake
 
         private static void RefreshFood()
         {
-            byte x, y;
+            byte x, y, i = 0;
 
             do
             {
                 x = (byte) Rng.Next(Board.Length);
                 y = (byte) Rng.Next(Board[x].Length);
+                i++;
+                if (i >= 80) return;
             } while (Board[x][y] != 0);
-
+            
             Board[x][y] = Food;
         }
 

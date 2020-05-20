@@ -20,16 +20,76 @@ namespace RazerSnake
         };
 
         private static readonly Color SnakeHeadColor = Color.FromRgb(0x00B7EB);
-        private static readonly Color DarkGreen = Color.FromRgb(0x3A8A2B);
+        private static readonly Color DarkGreen = Color.FromRgb(0x315C28);
         private static readonly Color Gold = Color.FromRgb(0xFFD300);
-        private static readonly Color DarkGold = Color.FromRgb(0xA18918);
+        private static readonly Color DarkGold = Color.FromRgb(0x6B5C12);
         
         private static KeyboardCustom _grid = KeyboardCustom.Create();
         private static IChroma _chroma;
 
-        internal static async Task Init() =>  _chroma = await ColoreProvider.CreateNativeAsync();
+        internal static async void Init()
+        {
+            _chroma = await ColoreProvider.CreateNativeAsync();
+            MainLoop();
+        }
 
-        internal static async Task ShowBoard(bool reset)
+        private static async void MainLoop()
+        {
+            bool blinkState = false, finishReset = true;
+
+            while (!MainForm.Disposing)
+            {
+                switch (Snake.State)
+                {
+                    case Snake.GameState.SelectMode:
+                        blinkState = !blinkState;
+                        _grid[Key.Enter] = blinkState ? Color.Green : Color.Black;
+                        await ShowBoard();
+                        await Task.Delay(250);
+                        break;
+                    
+                    case Snake.GameState.Countdown:
+                        finishReset = true;
+                        await Task.Delay(1000);
+                        if (Snake.Countdown <= 1)
+                        {
+                            Snake.State = Snake.GameState.InProgress;
+                            await ShowBoard(true);
+                            continue;
+                        }
+                        Snake.Countdown -= 1;
+                        await ShowBoard();
+                        break;
+                    
+                    case Snake.GameState.InProgress:
+                        Snake.NextStep();
+                        await ShowBoard();
+                        await Task.Delay(Snake.SleepTime);
+                        break;
+                    
+                    case Snake.GameState.Paused:
+                        blinkState = !blinkState;
+                        _grid[Key.Pause] = blinkState ? Color.Green : Color.Black;
+                        await ShowBoard(finishReset);
+                        finishReset = false;
+                        await Task.Delay(250);
+                        break;
+                    
+                    case Snake.GameState.Finished:
+                        blinkState = !blinkState;
+                        _grid[Key.End] = blinkState ? Color.Green : Color.Black;
+                        await ShowBoard();
+                        await Task.Delay(250);
+                        break;
+                    
+                    default:
+                        await Task.Delay(250);
+                        break;
+                }
+            }
+        }
+        
+        internal static async Task ShowBoard(bool reset = false)
         {
             if (reset)
                 _grid.Set(Color.Black);
@@ -79,13 +139,22 @@ namespace RazerSnake
                             _grid[Key.D5] = Color.Green;
                             break;
                     }
-                    
-                    _grid[Key.Enter] = Color.Green;
+
+                    if (reset)
+                    {
+                        _grid[Key.Enter] = Color.Green;
+                        MainForm.Instance.statusLabel.Text =
+                            @"Please select speed using numeric keys (1-5) and press ENTER.";
+                    }
+
                     break;
                 
                 case Snake.GameState.Countdown:
                     if (reset)
                         ShowSnakeBoard();
+                    
+                    MainForm.Instance.statusLabel.Text =
+                        $@"Game will begin in {Snake.Countdown} seconds.";
                     
                     if (Snake.Countdown > 2f)
                     {
@@ -130,27 +199,45 @@ namespace RazerSnake
                         
                         _grid[Key.End] = DarkGreen;
                         _grid[Key.Pause] = DarkGreen;
+                        
+                        MainForm.Instance.statusLabel.Text =
+                            @"Game is in progress.";
                     }
                     break;
 
                 case Snake.GameState.Paused:
-                    _grid[Key.Up] = DarkGold;
-                    _grid[Key.Down] = DarkGold;
-                    _grid[Key.Left] = DarkGold;
-                    _grid[Key.Right] = DarkGold;
-                    
-                    _grid[Key.End] = DarkGreen;
-                    _grid[Key.Pause] = Color.Green;
+                    if (reset)
+                    {
+                        ShowSnakeBoard();
+
+                        _grid[Key.Up] = DarkGold;
+                        _grid[Key.Down] = DarkGold;
+                        _grid[Key.Left] = DarkGold;
+                        _grid[Key.Right] = DarkGold;
+
+                        _grid[Key.End] = DarkGreen;
+                        _grid[Key.Pause] = Color.Green;
+
+                        MainForm.Instance.statusLabel.Text =
+                            @"Game paused. Press PAUSE key to unpause.";
+                    }
                     break;
                 
                 case Snake.GameState.Finished:
-                    _grid[Key.Up] = Color.Black;
-                    _grid[Key.Down] = Color.Black;
-                    _grid[Key.Left] = Color.Black;
-                    _grid[Key.Right] = Color.Black;
-                    
-                    _grid[Key.End] = Color.Green;
-                    _grid[Key.Pause] = Color.Black;
+                    if (reset)
+                    {
+                        _grid[Key.Up] = Color.Black;
+                        _grid[Key.Down] = Color.Black;
+                        _grid[Key.Left] = Color.Black;
+                        _grid[Key.Right] = Color.Black;
+
+                        _grid[Key.End] = Color.Green;
+                        _grid[Key.Pause] = Color.Black;
+                        
+                        MainForm.Instance.statusLabel.Text =
+                            @"Game over. Press END key to restart.";
+                    }
+
                     break;
             }
 
