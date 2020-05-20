@@ -22,6 +22,7 @@ namespace RazerSnake
         {
             Chroma.Init();
             await Task.Delay(1000);
+            await Chroma.Border();
             await Chroma.ShowBoard(true);
             _ready = true;
         }

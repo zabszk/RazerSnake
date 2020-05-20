@@ -21,6 +21,7 @@ namespace RazerSnake
         private static readonly Color DarkGreen = Color.FromRgb(0x315C28);
         private static readonly Color Gold = Color.FromRgb(0xFFD300);
         private static readonly Color DarkGold = Color.FromRgb(0x6B5C12);
+        private static readonly Color Crimson = Color.FromRgb(0xDC143C);
         
         private static KeyboardCustom _grid = KeyboardCustom.Create();
         private static IChroma _chroma;
@@ -198,6 +199,28 @@ namespace RazerSnake
 
                     if (reset)
                     {
+                        _grid[Key.F12] = Color.White;
+                        _grid[Key.F11] = Color.White;
+                        _grid[Key.F10] = Color.White;
+                        _grid[Key.F9] = Color.White;
+                        _grid[Key.F8] = Color.White;
+                        _grid[Key.F7] = Color.White;
+                        _grid[Key.F6] = Color.White;
+                        _grid[Key.F5] = Color.White;
+                        _grid[Key.F4] = Color.White;
+                        _grid[Key.F3] = Color.White;
+                        _grid[Key.F2] = Color.White;
+                        _grid[Key.F1] = Color.White;
+                        _grid[Key.Escape] = Color.White;
+                        _grid[Key.LeftControl] = Color.White;
+                        _grid[Key.LeftWindows] = Color.White;
+                        _grid[Key.LeftAlt] = Color.White;
+                        _grid[Key.Space] = Color.White;
+                        _grid[Key.RightAlt] = Color.White;
+                        _grid[Key.Function] = Color.White;
+                        _grid[Key.RightMenu] = Color.White;
+                        _grid[Key.RightControl] = Color.White;
+                        
                         _grid[Key.Up] = Gold;
                         _grid[Key.Down] = Gold;
                         _grid[Key.Left] = Gold;
@@ -262,7 +285,7 @@ namespace RazerSnake
                         break;
 
                     case Snake.Food:
-                        _grid[KeyboardMap[i][j]] = Color.HotPink;
+                        _grid[KeyboardMap[i][j]] = Crimson;
                         break;
 
                     case 1:
@@ -273,6 +296,54 @@ namespace RazerSnake
                         _grid[KeyboardMap[i][j]] = Color.Blue;
                         break;
                 }
+        }
+
+        internal static async Task Border()
+        {
+            const int delay = 50;
+            
+            await _chroma.Keyboard.SetKeyAsync(Key.F12, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.F11, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.F10, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.F9, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.F8, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.F7, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.F6, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.F5, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.F4, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.F3, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.F2, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.F1, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.Escape, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.LeftControl, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.LeftWindows, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.LeftAlt, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.Space, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.RightAlt, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.Function, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.RightMenu, Color.White);
+            await Task.Delay(delay);
+            await _chroma.Keyboard.SetKeyAsync(Key.RightControl, Color.White);
+            await Task.Delay(delay);
         }
 
         internal static async Task MapTest()
