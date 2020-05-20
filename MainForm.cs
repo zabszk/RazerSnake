@@ -26,5 +26,39 @@ namespace RazerSnake
         {
             await Chroma.MapTest();
         }
+
+        private void Form1_Activated(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void Form1_Deactivate(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            e.SuppressKeyPress = true;
+            
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    Snake.Dir = Snake.Direction.Up;
+                    break;
+                
+                case Keys.Down:
+                    Snake.Dir = Snake.Direction.Down;
+                    break;
+                
+                case Keys.Left:
+                    Snake.Dir = Snake.Direction.Left;
+                    break;
+                
+                case Keys.Right:
+                    Snake.Dir = Snake.Direction.Right;
+                    break;
+            }
+        }
     }
 }

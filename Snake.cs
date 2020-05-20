@@ -11,16 +11,27 @@ namespace RazerSnake
             Left,
             Right
         }
+
+        internal enum GameState : byte
+        {
+            SelectMode,
+            Countdown,
+            InProgress,
+            Paused,
+            Finished
+        }
         
         internal const byte Food = 0xFD, Right = 0xFE, DoubleRight = 0xFF;
         
         internal static byte[][] Board = new byte[14][];
 
-        internal static bool GameOver;
+        internal static byte Speed = 1;
+        internal static float Countdown = 3f;
+        internal static GameState State;
+        internal static Direction Dir;
         private static byte SnakeLength;
         private static readonly Random Rng = new Random();
-        private static Direction Dir;
-        
+
         static Snake()
         {
             for (byte i = 0; i < Board.Length; i++)
@@ -45,7 +56,7 @@ namespace RazerSnake
         internal static void InitSnake()
         {
             ClearBoard();
-            GameOver = false;
+            State = GameState.Countdown;
             SnakeLength = 3;
             Dir = Direction.Right;
 
@@ -102,7 +113,7 @@ namespace RazerSnake
 
             if (x < 0 || y < 0 || x >= Board.Length || y >= Board[x].Length)
             {
-                GameOver = true;
+                State = GameState.Finished;
                 return;
             }
 
@@ -127,10 +138,11 @@ namespace RazerSnake
                     Board[x][y] = 1;
                     Board[x2][y2] = SnakeLength;
                     SnakeLength++;
+                    RefreshFood();
                     break;
                 
                 default:
-                    GameOver = true;
+                    State = GameState.Finished;
                     return;
             }
         }
