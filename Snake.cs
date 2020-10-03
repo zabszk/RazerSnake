@@ -14,6 +14,7 @@ namespace RazerSnake
 
         internal enum GameState : byte
         {
+            SelectKeyboardSize,
             SelectMode,
             Countdown,
             InProgress,
@@ -56,10 +57,11 @@ namespace RazerSnake
                 }
             }
         }
-        
+
+        internal static bool Is60Percent;
         internal static byte Countdown = 3;
         internal static ushort SleepTime = 400;
-        internal static GameState State = GameState.SelectMode;
+        internal static GameState State = GameState.SelectKeyboardSize;
         internal static Direction Dir;
         private static byte _snakeLength, _speed = 3;
         private static readonly Random Rng = new Random();
@@ -151,8 +153,20 @@ namespace RazerSnake
 
             switch (Board[x][y])
             {
+                case Right when Dir == Direction.Left && Board[x-1][y] == DoubleRight:
+                    x -= 2;
+                    break;
+                
+                case Right when Dir == Direction.Left:
+                    x -= 1;
+                    break;
+                
                 case Right:
                     x++;
+                    break;
+                
+                case DoubleRight when Dir == Direction.Left:
+                    x -= 1;
                     break;
                 
                 case DoubleRight:

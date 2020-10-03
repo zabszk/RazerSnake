@@ -31,23 +31,39 @@ namespace RazerSnake
         {
             e.SuppressKeyPress = true;
             if (!_ready) return;
-            
+
             switch (e.KeyCode)
             {
                 case Keys.Up:
+                case Keys.I:
                     Snake.Dir = Snake.Direction.Up;
                     break;
                 
                 case Keys.Down:
+                case Keys.K:
                     Snake.Dir = Snake.Direction.Down;
                     break;
                 
                 case Keys.Left:
+                case Keys.J:
                     Snake.Dir = Snake.Direction.Left;
                     break;
                 
                 case Keys.Right:
+                case Keys.L:
                     Snake.Dir = Snake.Direction.Right;
+                    break;
+                
+                case Keys.R when Snake.State == Snake.GameState.SelectKeyboardSize:
+                    Snake.Is60Percent = false;
+                    Snake.State = Snake.GameState.SelectMode;
+                    await Chroma.ShowBoard(true);
+                    break;
+                
+                case Keys.D6 when Snake.State == Snake.GameState.SelectKeyboardSize:
+                    Snake.Is60Percent = true;
+                    Snake.State = Snake.GameState.SelectMode;
+                    await Chroma.ShowBoard(true);
                     break;
                 
                 case Keys.Escape when Snake.State == Snake.GameState.SelectMode || Snake.State == Snake.GameState.Finished:
@@ -87,26 +103,31 @@ namespace RazerSnake
                     break;
                 
                 case Keys.Pause when Snake.State == Snake.GameState.InProgress:
+                case Keys.OemPeriod when Snake.State == Snake.GameState.InProgress:
                     Snake.State = Snake.GameState.Paused;
                     await Chroma.ShowBoard(true);
                     break;
                 
                 case Keys.Pause when Snake.State == Snake.GameState.Paused:
+                case Keys.OemPeriod when Snake.State == Snake.GameState.Paused:
                     Snake.Countdown = 3;
                     Snake.State = Snake.GameState.Countdown;
                     await Chroma.ShowBoard(true);
                     break;
                 
                 case Keys.End when Snake.State == Snake.GameState.InProgress || Snake.State ==Snake.GameState.Paused || Snake.State ==Snake.GameState.Finished:
+                case Keys.Oem7 when Snake.State == Snake.GameState.InProgress || Snake.State ==Snake.GameState.Paused || Snake.State ==Snake.GameState.Finished:
                     Snake.State = Snake.GameState.SelectMode;
                     await Chroma.ShowBoard(true);
                     break;
                 
                 case Keys.Insert when Snake.State == Snake.GameState.SelectMode && _testSequence < 2:
+                case Keys.OemQuestion when Snake.State == Snake.GameState.SelectMode && _testSequence < 2:
                     _testSequence++;
                     break;
                 
                 case Keys.Home when _testSequence == 2:
+                case Keys.Oem6 when _testSequence == 2:
                     Testing = true;
                     await Chroma.MapTest();
                     Testing = false;
