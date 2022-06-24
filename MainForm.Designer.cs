@@ -36,7 +36,7 @@
             // 
             // statusLabel
             // 
-            this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.statusLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.statusLabel.Location = new System.Drawing.Point(12, 9);
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(776, 121);
@@ -45,17 +45,17 @@
             // 
             // authorLabel
             // 
-            this.authorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.authorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.authorLabel.ForeColor = System.Drawing.Color.Red;
             this.authorLabel.Location = new System.Drawing.Point(584, 130);
             this.authorLabel.Name = "authorLabel";
             this.authorLabel.Size = new System.Drawing.Size(204, 35);
             this.authorLabel.TabIndex = 2;
-            this.authorLabel.Text = "Created by Łukasz Jurczyk\r\nBuild Date: 2020/10/03";
+            this.authorLabel.Text = "Created by Łukasz Jurczyk\r\nBuild Date: 2022-06-24";
             // 
             // label1
             // 
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte) (0)));
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.Red;
             this.label1.Location = new System.Drawing.Point(12, 143);
             this.label1.Name = "label1";
@@ -75,7 +75,7 @@
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.Name = "MainForm";
-            this.Text = "RazerSnake v. 1.1.0";
+            this.Text = "RazerSnake v. 1.1.1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
